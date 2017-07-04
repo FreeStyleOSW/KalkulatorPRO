@@ -16,6 +16,7 @@ public class Controller{
     double lastNumber;
     double currentNumber;
     double result;
+    String lastOperation;
 
     @FXML Pane mainPane;
     @FXML FlowPane flowPane;
@@ -73,9 +74,8 @@ public class Controller{
     public void actionForButtons(){
         for (Button butt : ButtonField.getListOfButtons()){
             String WhichButtonClicked = butt.getText();
-            if (butt.getText().matches("1|2|3|4|5|6|7|8|9|0")){
-                WhichButtonClicked = "numbers";
-            }
+            if (butt.getText().matches("1|2|3|4|5|6|7|8|9|0")) WhichButtonClicked = "numbers";
+            if (butt.getText().matches("/|X|-")||butt.getText().equals("+")) WhichButtonClicked = "operations";
             switch (WhichButtonClicked){
                 case "numbers":
                     butt.setOnAction(event -> {
@@ -97,29 +97,67 @@ public class Controller{
                             errorLabel.setText("");
                         }
                     });
-                case "/":
+                    break;
+                case "operations":
                     butt.setOnAction(event -> {
-                        if (mainDownLabel.getText().equals("")){
+                        if (mainDownLabel.getText().equals("") && mainDownLabel.getText().equals("")){
+                            // Górne pole   -> EMPTY
+                            // Dolne pole   -> EMPTY
                             errorLabel.setText("Brak liczby !");
                             return;
-                        }
-                        if (mainUpLabel.getText().equals("")){
+                        }else if (mainUpLabel.getText().equals("")){
+                            // Górne pole -> EMPTY
+                            // Dolne pole -> FULL
                             lastNumber = Double.valueOf(mainDownLabel.getText());
-                            mainUpLabel.setText(lastNumber+"/");
+                            lastOperation = butt.getText();
+                            mainUpLabel.setText(lastNumber+butt.getText());
                             mainDownLabel.setText("");
 
-                        }else{
+                        }else if (!mainUpLabel.getText().equals("") && !mainDownLabel.getText().equals("")){
+                            //Góne pole  -> FULL
+                            //Dolne pole -> FULL
                             currentNumber = Double.valueOf(mainDownLabel.getText());
-                            result = lastNumber/currentNumber;
-                            mainUpLabel.setText(result+"/");
-                            mainDownLabel.setText("");
+                            if (!lastOperation.equals(butt.getText())){
+                                mainUpLabel.setText(operationForNumber(lastOperation)+butt.getText());
+                                lastOperation =butt.getText();
+                                lastNumber = operationForNumber(lastOperation);
+                                mainDownLabel.setText("");
+
+
+                            }else{
+                                mainUpLabel.setText(operationForNumber(lastOperation)+butt.getText());
+                                lastOperation = butt.getText();
+                                lastNumber = operationForNumber(lastOperation);
+                                mainDownLabel.setText("");
+
+                            }
+                        }else if (!mainUpLabel.getText().equals("") && mainDownLabel.getText().equals("")){
+                            // Górne pole -> FULL
+                            // Dolne pole -> EMPTY
+                            mainUpLabel.setText(lastNumber+butt.getText());
                         }
                     });
+                    break;
+                case "=":
+
             }
         }
     }
 
-    public double operationForNumber(double last , double curr, String whatOper){
+    public double operationForNumber(String whatOper){
+        System.out.println(whatOper);
+        if (whatOper.equals("/")){
+            result = lastNumber / currentNumber;
+        }
+        if (whatOper.equals("X")){
+            result = lastNumber * currentNumber;
+        }
+        if (whatOper.equals("-")){
+            result = lastNumber - currentNumber;
+        }
+        if (whatOper.equals("+")){
+            result = lastNumber + currentNumber;
+        }
         return result;
     }
 }
