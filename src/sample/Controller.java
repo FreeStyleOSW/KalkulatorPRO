@@ -22,7 +22,7 @@ public class Controller{
     @FXML FlowPane flowPane;
     @FXML Label mainDownLabel;
     @FXML Label mainUpLabel;
-    @FXML Label buttonLabel;
+    @FXML Label menuLabel;
     @FXML Label errorLabel;
     @FXML MenuButton menuButton;
     @FXML MenuItem menuItem1;
@@ -35,7 +35,7 @@ public class Controller{
         imageView.setFitWidth(40);
         menuButton.setGraphic(imageView);
         menuButton.setBackground(new Background(new BackgroundFill(Color.WHITE,CornerRadii.EMPTY,Insets.EMPTY)));
-        buttonLabel.setText(menuItem1.getText());
+        menuLabel.setText(menuItem1.getText());
         mainPane.setBackground(new Background(new BackgroundFill(Color.SILVER, CornerRadii.EMPTY, Insets.EMPTY)));
         mainDownLabel.setBackground(new Background(new BackgroundFill(Color.WHITE,CornerRadii.EMPTY, Insets.EMPTY)));
         mainUpLabel.setBackground(new Background(new BackgroundFill(Color.WHITE,CornerRadii.EMPTY, Insets.EMPTY)));
@@ -48,14 +48,14 @@ public class Controller{
 
     public void menuButtons(){
         menuItem1.setOnAction(event -> {
-            buttonLabel.setText(menuItem1.getText());
+            menuLabel.setText(menuItem1.getText());
             flowPane.getChildren().remove(0,flowPane.getChildren().size());
             ButtonField.setMenuNumber(0);
             setButtons();
             actionForButtons();
         });
         menuItem2.setOnAction(event -> {
-            buttonLabel.setText(menuItem2.getText());
+            menuLabel.setText(menuItem2.getText());
             flowPane.getChildren().remove(0,flowPane.getChildren().size());
             ButtonField.setMenuNumber(1);
             setButtons();
@@ -100,54 +100,70 @@ public class Controller{
                     break;
                 case "operations":
                     butt.setOnAction(event -> {
-                        if (mainDownLabel.getText().equals("") && mainDownLabel.getText().equals("")){
-                            // Górne pole   -> EMPTY
-                            // Dolne pole   -> EMPTY
+                        if (mainUpLabel.getText().equals("") && mainDownLabel.getText().equals("")){
                             errorLabel.setText("Brak liczby !");
                             return;
-                        }else if (mainUpLabel.getText().equals("")){
-                            // Górne pole -> EMPTY
-                            // Dolne pole -> FULL
+
+                        }else if (mainUpLabel.getText().equals("") && !mainDownLabel.getText().equals("")){
                             lastNumber = Double.valueOf(mainDownLabel.getText());
                             lastOperation = butt.getText();
-                            mainUpLabel.setText(lastNumber+butt.getText());
+                            mainUpLabel.setText(lastNumber+lastOperation);
                             mainDownLabel.setText("");
+                            errorLabel.setText("");
 
                         }else if (!mainUpLabel.getText().equals("") && !mainDownLabel.getText().equals("")){
-                            //Góne pole  -> FULL
-                            //Dolne pole -> FULL
                             currentNumber = Double.valueOf(mainDownLabel.getText());
                             if (!lastOperation.equals(butt.getText())){
-                                mainUpLabel.setText(operationForNumber(lastOperation)+butt.getText());
-                                lastOperation =butt.getText();
                                 lastNumber = operationForNumber(lastOperation);
+                                mainUpLabel.setText(lastNumber+butt.getText());
+                                lastOperation = butt.getText();
                                 mainDownLabel.setText("");
-
-
+                                errorLabel.setText("");
                             }else{
-                                mainUpLabel.setText(operationForNumber(lastOperation)+butt.getText());
                                 lastOperation = butt.getText();
                                 lastNumber = operationForNumber(lastOperation);
+                                mainUpLabel.setText(lastNumber+butt.getText());
                                 mainDownLabel.setText("");
-
                             }
+
                         }else if (!mainUpLabel.getText().equals("") && mainDownLabel.getText().equals("")){
-                            // Górne pole -> FULL
-                            // Dolne pole -> EMPTY
                             mainUpLabel.setText(lastNumber+butt.getText());
+                            lastOperation = butt.getText();
                         }
                     });
                     break;
                 case "=":
+                    butt.setOnAction(event -> {
+                        if (!mainUpLabel.getText().equals("") && mainDownLabel.getText().equals("")){
+                            mainDownLabel.setText(lastNumber+"");
+                            mainUpLabel.setText("");
 
+                        }else if (!mainUpLabel.getText().equals("") && !mainDownLabel.getText().equals("")){
+                            currentNumber = Double.valueOf(mainDownLabel.getText());
+                            mainDownLabel.setText(operationForNumber(lastOperation)+"");
+                            mainUpLabel.setText("");
+                        }
+                    });
+                    break;
+                case ".":
+                    butt.setOnAction(event -> {
+                        if (mainDownLabel.getText().equals("")) mainDownLabel.setText("0");
+                        if (!mainDownLabel.getText().contains(".")) {
+                            mainDownLabel.setText(mainDownLabel.getText() + ".");
+                        }
+                    });
             }
         }
     }
 
     public double operationForNumber(String whatOper){
-        System.out.println(whatOper);
         if (whatOper.equals("/")){
-            result = lastNumber / currentNumber;
+            if (currentNumber == 0){
+                errorLabel.setText("Nie dzieli się przez 0 !");
+                result = lastNumber;
+            }else{
+                result = lastNumber / currentNumber;
+            }
         }
         if (whatOper.equals("X")){
             result = lastNumber * currentNumber;
