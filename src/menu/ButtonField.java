@@ -1,5 +1,7 @@
 package menu;
 
+import javafx.scene.control.Button;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -7,22 +9,42 @@ import java.util.List;
  * Created by Marcin on 03.07.2017.
  */
  public class ButtonField {
+    static List<Button> ListOfButtons;
+    static int menuNumber = 0;
+
+    public static List<Button> getListOfButtons() {
+        return ListOfButtons;
+    }
+
+    public static void setMenuNumber(int menuNumber) {
+        ButtonField.menuNumber = menuNumber;
+    }
+
     public static String[] getButtonField(int numFromList){
         List<String[]> listButtonFields = new ArrayList<>();
-        String buttonsSetNr1[] = {
+        String standardButtonsSetNr1[] = {
                 "7","8","9","/","CE",
                 "4","5","6","X","C",
                 "1","2","3","-","",
                 ".","0","=","+",""
         };
-        String buttonsSetNr2[] = {
+        String standardButtonsSetNr2[] = {
                 "9","8","7","/","CE",
                 "6","5","4","X","C",
                 "3","2","1","-","",
                 ".","0","=","+",""
         };
-        listButtonFields.add(buttonsSetNr1);
-        listButtonFields.add(buttonsSetNr2);
+        listButtonFields.add(standardButtonsSetNr1);
+        listButtonFields.add(standardButtonsSetNr2);
         return listButtonFields.get(numFromList);
+    }
+    public static void setStandardButtonField(){
+        ListOfButtons = new ArrayList<>();
+        String[] tempButtonList = getButtonField(menuNumber);
+        for (int i = 0; i < tempButtonList.length; i++) {
+            Button tempButt = new Button(tempButtonList[i] + "");
+            tempButt.setPrefSize(50, 50);
+            ListOfButtons.add(tempButt);
+        }
     }
 }
