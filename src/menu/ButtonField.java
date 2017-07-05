@@ -20,8 +20,8 @@ import java.util.List;
         ButtonField.menuNumber = menuNumber;
     }
 
-    public static String[] getButtonField(int numFromList){
-        List<String[]> listButtonFields = new ArrayList<>();
+    public static String[] getStandardButtonField(int numFromList){
+        List<String[]> listStandardButtonFields = new ArrayList<>();
         String standardButtonsSetNr1[] = {
                 "7","8","9","/","CE",
                 "4","5","6","X","C",
@@ -34,13 +34,13 @@ import java.util.List;
                 "3","2","1","-","",
                 ".","0","=","+",""
         };
-        listButtonFields.add(standardButtonsSetNr1);
-        listButtonFields.add(standardButtonsSetNr2);
-        return listButtonFields.get(numFromList);
+        listStandardButtonFields.add(standardButtonsSetNr1);
+        listStandardButtonFields.add(standardButtonsSetNr2);
+        return listStandardButtonFields.get(numFromList);
     }
     public static void setStandardButtonField(){
         ListOfButtons = new ArrayList<>();
-        String[] tempButtonList = getButtonField(menuNumber);
+        String[] tempButtonList = getStandardButtonField(menuNumber);
         for (int i = 0; i < tempButtonList.length; i++) {
             Button tempButt = new Button(tempButtonList[i] + "");
             tempButt.setPrefSize(50, 50);

@@ -12,11 +12,14 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import menu.ButtonField;
 
+import java.text.DecimalFormat;
+
 public class Controller{
     double lastNumber;
     double currentNumber;
     double result;
     String lastOperation;
+    DecimalFormat df;
 
     @FXML Pane mainPane;
     @FXML FlowPane flowPane;
@@ -40,6 +43,9 @@ public class Controller{
         mainDownLabel.setBackground(new Background(new BackgroundFill(Color.WHITE,CornerRadii.EMPTY, Insets.EMPTY)));
         mainUpLabel.setBackground(new Background(new BackgroundFill(Color.WHITE,CornerRadii.EMPTY, Insets.EMPTY)));
         menuButton.setStyle("-fx-border-color: black;");
+        df = new DecimalFormat(); 
+        df.setMinimumFractionDigits(0);
+        df.setMaximumFractionDigits(10);
         menuButtons();
         setButtons();
         actionForButtons();
