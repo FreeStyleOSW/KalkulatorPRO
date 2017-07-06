@@ -56,14 +56,12 @@ public class Controller{
         menuItem1.setOnAction(event -> {
             menuLabel.setText(menuItem1.getText());
             flowPane.getChildren().remove(0,flowPane.getChildren().size());
-            ButtonField.setMenuNumber(0);
             setButtons();
             actionForButtons();
         });
         menuItem2.setOnAction(event -> {
             menuLabel.setText(menuItem2.getText());
             flowPane.getChildren().remove(0,flowPane.getChildren().size());
-            ButtonField.setMenuNumber(1);
             setButtons();
             actionForButtons();
         });
@@ -71,7 +69,7 @@ public class Controller{
 
     public void setButtons(){
         // Tutaj można zmienić ButtonFielda, narazie jest tylko Standardowe ułożenie przycisków
-        ButtonField.setStandardButtonField();
+        ButtonField.getStandardButtonField();
         for (Button butt : ButtonField.getListOfButtons()){
             flowPane.getChildren().add(butt);
         }
