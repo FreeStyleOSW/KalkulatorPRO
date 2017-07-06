@@ -1,6 +1,7 @@
 package menu;
 
 import javafx.scene.control.Button;
+import javafx.scene.layout.FlowPane;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,6 +12,7 @@ import java.util.List;
  public class ButtonField {
     static List<Button> ListOfButtons;
     static int menuNumber = 0;
+    static FlowPane calculateFlowPane;
 
     public static List<Button> getListOfButtons() {
         return ListOfButtons;
@@ -30,5 +32,10 @@ import java.util.List;
             tempButt.setPrefSize(50, 50);
             ListOfButtons.add(tempButt);
         }
+    }
+
+    public static FlowPane getCalculateDate(){
+
+        return calculateFlowPane;
     }
 }

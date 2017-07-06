@@ -18,6 +18,7 @@ public class Controller{
     double lastNumber;
     double currentNumber;
     double result;
+    boolean deletedMainLabels = false;
     String lastOperation;
     DecimalFormat df;
 
@@ -47,35 +48,44 @@ public class Controller{
         df.setMinimumFractionDigits(0);
         df.setMaximumFractionDigits(10);
         menuButtons();
-        setButtons();
-        actionForButtons();
-
+        setButtons("Standard");
+        actionForStandardButtons();
     }
 
     public void menuButtons(){
         menuItem1.setOnAction(event -> {
             menuLabel.setText(menuItem1.getText());
             flowPane.getChildren().remove(0,flowPane.getChildren().size());
-            setButtons();
-            actionForButtons();
+            setButtons("Standard");
+            actionForStandardButtons();
         });
         menuItem2.setOnAction(event -> {
             menuLabel.setText(menuItem2.getText());
             flowPane.getChildren().remove(0,flowPane.getChildren().size());
-            setButtons();
-            actionForButtons();
+            setButtons("CalculateDate");
         });
     }
 
-    public void setButtons(){
-        // Tutaj można zmienić ButtonFielda, narazie jest tylko Standardowe ułożenie przycisków
-        ButtonField.getStandardButtonField();
-        for (Button butt : ButtonField.getListOfButtons()){
-            flowPane.getChildren().add(butt);
+    public void setButtons(String whatButtonFieldShowed){
+        switch (whatButtonFieldShowed){
+            case "Standard":
+                if (deletedMainLabels){
+                    mainPane.getChildren().addAll(mainUpLabel,mainDownLabel);
+                    deletedMainLabels = false;
+                }
+                ButtonField.getStandardButtonField();
+                actionForStandardButtons();
+                for (Button butt : ButtonField.getListOfButtons()){
+                    flowPane.getChildren().add(butt);
+                }
+                break;
+            case "CalculateDate":
+                mainPane.getChildren().removeAll(mainUpLabel,mainDownLabel);
+                deletedMainLabels = true;
         }
     }
 
-    public void actionForButtons(){
+    public void actionForStandardButtons(){
         for (Button butt : ButtonField.getListOfButtons()){
             String WhichButtonClicked = butt.getText();
             if (butt.getText().matches("1|2|3|4|5|6|7|8|9|0")) WhichButtonClicked = "numbers";
