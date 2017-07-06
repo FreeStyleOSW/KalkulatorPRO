@@ -12,21 +12,15 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import menu.ButtonField;
 
-import java.text.DecimalFormat;
-
 public class Controller{
-    private double lastNumber;
-    private double currentNumber;
-    private double result;
-    private boolean deletedMainLabels = false;
+    private double lastNumber,currentNumber,result;
+    Label mainUpLabel;
+    Label mainDownLabel;
     FlowPane calculateFlowPane;
     String lastOperation;
-    DecimalFormat df;
 
     @FXML Pane mainPane;
     @FXML FlowPane flowPaneForStandardButtons;
-    @FXML Label mainDownLabel;
-    @FXML Label mainUpLabel;
     @FXML Label menuLabel;
     @FXML Label errorLabel;
     @FXML MenuButton menuButton;
@@ -34,37 +28,41 @@ public class Controller{
     @FXML MenuItem menuItem2;
 
     @FXML public void initialize(){
+        ButtonField buttonField = new ButtonField();
+
         Image playI = new Image("/menu/res/menu1.png");
         ImageView imageView = new ImageView(playI);
         imageView.setFitHeight(40);
         imageView.setFitWidth(40);
-
+        menuButtons();
+        menuLabel.setText(menuItem1.getText());
         menuButton.setGraphic(imageView);
         menuButton.setBackground(new Background(new BackgroundFill(Color.WHITE,CornerRadii.EMPTY,Insets.EMPTY)));
         menuButton.setStyle("-fx-border-color: black;");
-        menuLabel.setText(menuItem1.getText());
         mainPane.setBackground(new Background(new BackgroundFill(Color.SILVER, CornerRadii.EMPTY, Insets.EMPTY)));
-        mainDownLabel.setBackground(new Background(new BackgroundFill(Color.WHITE,CornerRadii.EMPTY, Insets.EMPTY)));
-        mainUpLabel.setBackground(new Background(new BackgroundFill(Color.WHITE,CornerRadii.EMPTY, Insets.EMPTY)));
 
-        df = new DecimalFormat();
-        df.setMinimumFractionDigits(0);
-        df.setMaximumFractionDigits(10);
-
-        menuButtons();
-        setButtons("Standard");
+        mainUpLabel = buttonField.addMainUpLabel();
+        mainDownLabel = buttonField.addMainDownLabel();
+        flowPaneForStandardButtons.getChildren().add(mainUpLabel);
+        flowPaneForStandardButtons.getChildren().add(mainDownLabel);
+        buttonField.getStandardButtonField();
         actionForStandardButtons();
-
         for (Button butt : ButtonField.getListOfStandardButtons()){
             flowPaneForStandardButtons.getChildren().add(butt);
         }
+
+        calculateFlowPane = buttonField.getCalculateFlowPane();
+        mainPane.getChildren().add(calculateFlowPane);
+        buttonField.actionForCalculateDate();
+        calculateFlowPane.setVisible(false);
     }
 
     public void menuButtons(){
         menuItem1.setOnAction(event -> {
             menuLabel.setText(menuItem1.getText());
+            mainUpLabel.setText("");
+            mainDownLabel.setText("");
             setButtons("Standard");
-            actionForStandardButtons();
         });
         menuItem2.setOnAction(event -> {
             menuLabel.setText(menuItem2.getText());
@@ -75,27 +73,18 @@ public class Controller{
     public void setButtons(String whatButtonFieldShowed){
         switch (whatButtonFieldShowed){
             case "Standard":
-                if (deletedMainLabels){
-                    mainPane.getChildren().addAll(mainUpLabel,mainDownLabel,flowPaneForStandardButtons);
-                    deletedMainLabels = false;
-                }
-                mainPane.getChildren().remove(calculateFlowPane);
-                ButtonField.getStandardButtonField();
-                actionForStandardButtons();
+                flowPaneForStandardButtons.setVisible(true);
+                calculateFlowPane.setVisible(false);
                 break;
             case "CalculateDate":
-                ButtonField calculateDate = new ButtonField();
-                calculateFlowPane = calculateDate.getCalculateFlowPane();
-                mainPane.getChildren().removeAll(flowPaneForStandardButtons,mainUpLabel,mainDownLabel);
-                deletedMainLabels = true;
-                mainPane.getChildren().add(calculateFlowPane);
-                calculateDate.actionForCalculateDate();
+                flowPaneForStandardButtons.setVisible(false);
+                calculateFlowPane.setVisible(true);
                 break;
         }
     }
 
     public void actionForStandardButtons(){
-        for (Button butt : ButtonField.getListOfStandardButtons()){
+        for (Button butt : ButtonField.getListOfStandardButtons() ){
             String WhichButtonClicked = butt.getText();
             if (butt.getText().matches("1|2|3|4|5|6|7|8|9|0")) WhichButtonClicked = "numbers";
             if (butt.getText().matches("/|X|-")||butt.getText().equals("+")) WhichButtonClicked = "operations";

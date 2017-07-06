@@ -1,14 +1,22 @@
 package menu;
 
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.FlowPane;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.util.StringConverter;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 /**
@@ -17,29 +25,20 @@ import java.util.List;
  public class ButtonField {
     static List<Button> ListOfStandardButtons;
     static FlowPane calculateFlowPane;
-    int years1 = 0;
-    int years2 = 0;
-    int years = 0;
-    int months1 = 0;
-    int months2 = 0;
-    int months = 0;
-    int days1 = 0;
-    int days2 = 0;
-    int days = 0;
-    boolean dataPickerSet1 = false;
-    boolean dataPickerSet2 = false;
+    int years1,years2,months1,months2,days1,days2;
     DatePicker datePicker1;
     DatePicker datePicker2;
     Label showFullTime;
     Label showDayTime;
+    Label mainUpLabel;
+    Label mainDownLabel;
 
     public static List<Button> getListOfStandardButtons() {
         return ListOfStandardButtons;
     }
 
-    public static void getStandardButtonField(){
+    public List<Button> getStandardButtonField(){
         ListOfStandardButtons = new ArrayList<>();
-        List<String[]> listStandardButtonFields = new ArrayList<>();
         String standardButtonsSet[] = {
                 "7","8","9","/","CE",
                 "4","5","6","X","C",
@@ -51,6 +50,7 @@ import java.util.List;
             tempButt.setPrefSize(50, 50);
             ListOfStandardButtons.add(tempButt);
         }
+        return ListOfStandardButtons;
     }
 
     public FlowPane getCalculateFlowPane(){
@@ -60,11 +60,11 @@ import java.util.List;
         calculateFlowPane.setLayoutY(61);
 
         Label fromLabel = new Label("OD");
-        fromLabel.setFont(new Font("",20));
+        fromLabel.setFont(new Font("",15));
         fromLabel.setPrefSize(250,30);
 
         Label toLabel = new Label("DO");
-        toLabel.setFont(new Font("",20));
+        toLabel.setFont(new Font("",15));
         toLabel.setPrefSize(250,30);
 
         showFullTime = new Label("");
@@ -81,34 +81,77 @@ import java.util.List;
 
         datePicker1 = new DatePicker();
         datePicker1.setPrefSize(250,30);
+        datePicker1.setPromptText(getCurrentDate());
 
 
         datePicker2 = new DatePicker();
         datePicker2.setPrefSize(250,30);
+        datePicker2.setPromptText(getCurrentDate());
 
         calculateFlowPane.getChildren().addAll(fromLabel,datePicker1,toLabel,datePicker2,diffLabel,showFullTime,showDayTime);
         return calculateFlowPane;
     }
+
     public void actionForCalculateDate(){
         datePicker1.setOnAction(event -> {
-            dataPickerSet1 = true;
             years1 = datePicker1.getValue().getYear();
             months1 = datePicker1.getValue().getMonthValue();
             days1 = datePicker1.getValue().getDayOfMonth();
-
+            int years = Math.abs(years1-years2);
+            int months = Math.abs(months1-months2);
+            int days = Math.abs(days1-days2);
+            int allOfDays = (years*365)+(months*30)+days;
+            showFullTime.setText("Year(s): "+years+ "   Month(s): "+months+"   Day(s): "+days);
+            showDayTime.setText("Day(s): ~"+allOfDays);
         });
         datePicker2.setOnAction(event -> {
-            dataPickerSet2 = true;
             years2 = datePicker2.getValue().getYear();
             months2 = datePicker2.getValue().getMonthValue();
             days2 = datePicker2.getValue().getDayOfMonth();
+            int years = Math.abs(years1-years2);
+            int months = Math.abs(months1-months2);
+            int days = Math.abs(days1-days2);
+            int allOfDays = (years*365)+(months*30)+days;
+            showDayTime.setText("Day(s): ~"+allOfDays);
+            showFullTime.setText("Year(s): "+years+ "   Month(s): "+months+"   Day(s): "+days);
         });
+    }
 
-        if (dataPickerSet1 && dataPickerSet2){
-            years = Math.abs(years1-years2);
-            months = Math.abs(months1-months2);
-            days = Math.abs(days1-days2);
-            showFullTime.setText("Year(s): "+years+ " , Month(s): "+months+" , Day(s): "+days);
-        }
+    public Label addMainUpLabel(){
+        mainUpLabel = new Label("");
+        mainUpLabel.setPrefSize(250,30);
+        mainUpLabel.setLayoutX(25);
+        mainUpLabel.setLayoutY(59);
+        mainUpLabel.setFont(new Font("",20));
+        mainUpLabel.setAlignment(Pos.BOTTOM_RIGHT);
+        mainUpLabel.setBackground(new Background(new BackgroundFill(Color.WHITE,CornerRadii.EMPTY, Insets.EMPTY)));
+
+        return mainUpLabel;
+    }
+
+    public Label addMainDownLabel(){
+        mainDownLabel = new Label("");
+        mainDownLabel.setPrefSize(250,30);
+        mainDownLabel.setLayoutX(25);
+        mainDownLabel.setLayoutY(89);
+        mainDownLabel.setFont(new Font("",20));
+        mainDownLabel.setAlignment(Pos.BOTTOM_RIGHT);
+        mainDownLabel.setBackground(new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY)));
+
+        return mainDownLabel;
+    }
+
+    public String getCurrentDate(){
+        int currDay = new GregorianCalendar().get(Calendar.DAY_OF_MONTH);
+        int currMonth = new GregorianCalendar().get(Calendar.MONTH);
+        String currYearString = ""+new GregorianCalendar().get(Calendar.YEAR);
+        String currDayString;
+        String currMonthString;
+        if (currDay < 10) currDayString = "0"+currDay;
+        else currDayString = currDay+"";
+        if (currMonth < 10) currMonthString = "0"+currMonth;
+        else currMonthString = currMonth+"";
+
+        return currDayString+"."+currMonthString+"."+currYearString;
     }
 }
