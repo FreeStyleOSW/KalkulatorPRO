@@ -15,10 +15,10 @@ import menu.ButtonField;
 import java.text.DecimalFormat;
 
 public class Controller{
-    double lastNumber;
-    double currentNumber;
-    double result;
-    boolean deletedMainLabels = false;
+    private double lastNumber;
+    private double currentNumber;
+    private double result;
+    private boolean deletedMainLabels = false;
     FlowPane calculateFlowPane;
     String lastOperation;
     DecimalFormat df;
@@ -38,19 +38,23 @@ public class Controller{
         ImageView imageView = new ImageView(playI);
         imageView.setFitHeight(40);
         imageView.setFitWidth(40);
+
         menuButton.setGraphic(imageView);
         menuButton.setBackground(new Background(new BackgroundFill(Color.WHITE,CornerRadii.EMPTY,Insets.EMPTY)));
+        menuButton.setStyle("-fx-border-color: black;");
         menuLabel.setText(menuItem1.getText());
         mainPane.setBackground(new Background(new BackgroundFill(Color.SILVER, CornerRadii.EMPTY, Insets.EMPTY)));
         mainDownLabel.setBackground(new Background(new BackgroundFill(Color.WHITE,CornerRadii.EMPTY, Insets.EMPTY)));
         mainUpLabel.setBackground(new Background(new BackgroundFill(Color.WHITE,CornerRadii.EMPTY, Insets.EMPTY)));
-        menuButton.setStyle("-fx-border-color: black;");
-        df = new DecimalFormat(); 
+
+        df = new DecimalFormat();
         df.setMinimumFractionDigits(0);
         df.setMaximumFractionDigits(10);
+
         menuButtons();
         setButtons("Standard");
         actionForStandardButtons();
+
         for (Button butt : ButtonField.getListOfStandardButtons()){
             flowPaneForStandardButtons.getChildren().add(butt);
         }
@@ -78,14 +82,14 @@ public class Controller{
                 mainPane.getChildren().remove(calculateFlowPane);
                 ButtonField.getStandardButtonField();
                 actionForStandardButtons();
-                System.out.println(mainPane.getChildren().toString());
                 break;
             case "CalculateDate":
-                calculateFlowPane = ButtonField.getCalculateDate();
+                ButtonField calculateDate = new ButtonField();
+                calculateFlowPane = calculateDate.getCalculateFlowPane();
                 mainPane.getChildren().removeAll(flowPaneForStandardButtons,mainUpLabel,mainDownLabel);
                 deletedMainLabels = true;
                 mainPane.getChildren().add(calculateFlowPane);
-                System.out.println(mainPane.getChildren().toString());
+                calculateDate.actionForCalculateDate();
                 break;
         }
     }
