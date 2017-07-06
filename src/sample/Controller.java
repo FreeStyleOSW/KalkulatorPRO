@@ -19,11 +19,12 @@ public class Controller{
     double currentNumber;
     double result;
     boolean deletedMainLabels = false;
+    FlowPane calculateFlowPane;
     String lastOperation;
     DecimalFormat df;
 
     @FXML Pane mainPane;
-    @FXML FlowPane flowPane;
+    @FXML FlowPane flowPaneForStandardButtons;
     @FXML Label mainDownLabel;
     @FXML Label mainUpLabel;
     @FXML Label menuLabel;
@@ -50,18 +51,19 @@ public class Controller{
         menuButtons();
         setButtons("Standard");
         actionForStandardButtons();
+        for (Button butt : ButtonField.getListOfStandardButtons()){
+            flowPaneForStandardButtons.getChildren().add(butt);
+        }
     }
 
     public void menuButtons(){
         menuItem1.setOnAction(event -> {
             menuLabel.setText(menuItem1.getText());
-            flowPane.getChildren().remove(0,flowPane.getChildren().size());
             setButtons("Standard");
             actionForStandardButtons();
         });
         menuItem2.setOnAction(event -> {
             menuLabel.setText(menuItem2.getText());
-            flowPane.getChildren().remove(0,flowPane.getChildren().size());
             setButtons("CalculateDate");
         });
     }
@@ -70,23 +72,26 @@ public class Controller{
         switch (whatButtonFieldShowed){
             case "Standard":
                 if (deletedMainLabels){
-                    mainPane.getChildren().addAll(mainUpLabel,mainDownLabel);
+                    mainPane.getChildren().addAll(mainUpLabel,mainDownLabel,flowPaneForStandardButtons);
                     deletedMainLabels = false;
                 }
+                mainPane.getChildren().remove(calculateFlowPane);
                 ButtonField.getStandardButtonField();
                 actionForStandardButtons();
-                for (Button butt : ButtonField.getListOfButtons()){
-                    flowPane.getChildren().add(butt);
-                }
+                System.out.println(mainPane.getChildren().toString());
                 break;
             case "CalculateDate":
-                mainPane.getChildren().removeAll(mainUpLabel,mainDownLabel);
+                calculateFlowPane = ButtonField.getCalculateDate();
+                mainPane.getChildren().removeAll(flowPaneForStandardButtons,mainUpLabel,mainDownLabel);
                 deletedMainLabels = true;
+                mainPane.getChildren().add(calculateFlowPane);
+                System.out.println(mainPane.getChildren().toString());
+                break;
         }
     }
 
     public void actionForStandardButtons(){
-        for (Button butt : ButtonField.getListOfButtons()){
+        for (Button butt : ButtonField.getListOfStandardButtons()){
             String WhichButtonClicked = butt.getText();
             if (butt.getText().matches("1|2|3|4|5|6|7|8|9|0")) WhichButtonClicked = "numbers";
             if (butt.getText().matches("/|X|-")||butt.getText().equals("+")) WhichButtonClicked = "operations";
