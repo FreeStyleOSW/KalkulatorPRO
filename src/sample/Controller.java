@@ -14,10 +14,10 @@ import menu.ButtonField;
 
 public class Controller{
     private double lastNumber,currentNumber,result;
-    Label mainUpLabel;
-    Label mainDownLabel;
-    FlowPane calculateFlowPane;
-    String lastOperation;
+    private Label mainUpLabel;
+    private Label mainDownLabel;
+    private FlowPane calculateFlowPane;
+    private String lastOperation;
 
     @FXML Pane mainPane;
     @FXML FlowPane flowPaneForStandardButtons;

@@ -23,15 +23,15 @@ import java.util.List;
  * Created by Marcin on 03.07.2017.
  */
  public class ButtonField {
-    static List<Button> ListOfStandardButtons;
-    static FlowPane calculateFlowPane;
-    int years1,years2,months1,months2,days1,days2;
-    DatePicker datePicker1;
-    DatePicker datePicker2;
-    Label showFullTime;
-    Label showDayTime;
-    Label mainUpLabel;
-    Label mainDownLabel;
+    private static List<Button> ListOfStandardButtons;
+    private static FlowPane calculateFlowPane;
+    private int years1,years2,months1,months2,days1,days2;
+    private DatePicker datePicker1;
+    private DatePicker datePicker2;
+    private Label showFullTime;
+    private Label showDayTime;
+    private Label mainUpLabel;
+    private Label mainDownLabel;
 
     public static List<Button> getListOfStandardButtons() {
         return ListOfStandardButtons;
@@ -143,7 +143,7 @@ import java.util.List;
 
     public String getCurrentDate(){
         int currDay = new GregorianCalendar().get(Calendar.DAY_OF_MONTH);
-        int currMonth = new GregorianCalendar().get(Calendar.MONTH);
+        int currMonth = new GregorianCalendar().get(Calendar.MONTH)+1;
         String currYearString = ""+new GregorianCalendar().get(Calendar.YEAR);
         String currDayString;
         String currMonthString;
